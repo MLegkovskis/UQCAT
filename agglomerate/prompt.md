@@ -1,7 +1,3 @@
-Certainly! Here is a comprehensive prompt to guide future analysis and visualization of UQ/SA results for a model based on given CSV files and a NumPy-based flood model:
-
----
-
 ### Prompt for UQ/SA Analysis and Visualization
 
 **Context:**
@@ -56,36 +52,57 @@ def function_of_interest(inputs):
     C = Cd + Cs
     return [C]
 
-# Load expectation convergence data
-expectation_convergence_df = pd.read_csv('path/to/expectation_convergence.csv')
 
 # Plot mean estimate convergence
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+# Load the CSV file
+csv_file = "/mnt/data/expectation_convergence.csv"
+data = pd.read_csv(csv_file)
+
+# Plot the data
 plt.figure(figsize=(10, 6))
-plt.plot(expectation_convergence_df['Sample Size'], expectation_convergence_df['Mean Estimate'], label='Mean Estimate', color='blue')
-plt.fill_between(expectation_convergence_df['Sample Size'], expectation_convergence_df['Lower Bound'], expectation_convergence_df['Upper Bound'], color='blue', alpha=0.2, label='95% Confidence Interval')
+
+# Plot the mean estimates
+plt.plot(data['Sample Size'], data['Mean Estimate'], label='Mean Estimate', color='blue')
+
+# Plot the confidence intervals
+plt.fill_between(np.array(data['Sample Size'], dtype=float),np.array(data['Lower Bound'], dtype=float), np.array(data['Upper Bound'], dtype=float), color='blue', alpha=0.2, label='95% Confidence Interval')
 plt.title('Mean Estimate Convergence with Confidence Intervals')
 plt.xlabel('Sample Size')
 plt.ylabel('Mean Estimate')
 plt.legend()
 plt.grid(True)
-plt.savefig('path/to/save/mean_estimate_convergence_plot.png')
 plt.show()
 
-# Load combined coefficients data
-combined_coefficients_df = pd.read_csv('path/to/combined_coefficients.csv')
-xticks = combined_coefficients_df['Variable'][0].strip('[]').replace("'", "").split(',')
-combined_coefficients_df['Variable'] = combined_coefficients_df.index
-combined_coefficients_df.set_index('Variable', inplace=True)
 
 # Plot combined coefficients
-ax = combined_coefficients_df.plot(kind='bar', figsize=(12, 8))
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the data
+df = pd.read_csv('/mnt/data/combined_coefficients.csv')
+
+# Extract the first 'Variable' entry and use it to create x-ticks
+xticks = df['Variable'][0].strip('[]').replace("'", "").split(',')
+
+# Convert the 'Variable' column to a unique identifier (e.g., just use the index for simplicity)
+df['Variable'] = df.index
+
+# Set the 'Variable' column as the index
+df.set_index('Variable', inplace=True)
+
+# Plot the data
+ax = df.plot(kind='bar', figsize=(12, 8))
 plt.xlabel('Variable Group Index')
 plt.ylabel('Correlation Coefficient')
 plt.title('Comparison of Correlation Coefficients Across Variables')
 plt.legend(title='Method')
+
+# Manually set the x-tick labels
 ax.set_xticklabels(xticks, rotation=45, ha='right')
 plt.tight_layout()
-plt.savefig('path/to/save/combined_coefficients_plot.png')
 plt.show()
 ```
 
@@ -109,7 +126,3 @@ plt.show()
    - Recommendations for further refinement and investigation.
 
 By following this prompt, you can effectively conduct a comprehensive UQ/SA analysis and generate detailed reports with visualizations.
-
----
-
-Feel free to adjust the file paths and any other details specific to your data and model setup.
