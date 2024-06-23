@@ -24,6 +24,7 @@ def index():
             # Check for plot URL in the response
             if 'attachments' in response['choices'][0]['message']:
                 plot_url = response['choices'][0]['message']['attachments'][0]['url']
+
         except Exception as e:
             output = str(e)
         return render_template_string(template, code=user_code, output=output, plot_url=plot_url)
